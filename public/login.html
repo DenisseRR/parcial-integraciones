@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href='http://fonts.googleapis.com/css?family=Roboto:300,400,500,700,900' rel='stylesheet' type='text/css'>
+    <title>LUNA | Responsive Admin Theme</title>
+    <link rel="stylesheet" href="vendor/fontawesome/css/font-awesome.css"/>
+    <link rel="stylesheet" href="vendor/animate.css/animate.css"/>
+    <link rel="stylesheet" href="vendor/bootstrap/css/bootstrap.css"/>
+    <link rel="stylesheet" href="styles/pe-icons/pe-icon-7-stroke.css"/>
+    <link rel="stylesheet" href="styles/pe-icons/helper.css"/>
+    <link rel="stylesheet" href="styles/stroke-icons/style.css"/>
+    <link rel="stylesheet" href="styles/style.css">
+</head>
+<body class="blank">
+<div class="wrapper">
+    <section class="content">
+        <div class="back-link">
+            <a href="index-2.html" class="btn btn-accent">Back to Dashboard</a>
+        </div>
+        <div class="container-center animated slideInDown">
+            <div class="view-header">
+                <div class="header-icon">
+                    <i class="pe page-header-icon pe-7s-unlock"></i>
+                </div>
+                <div class="header-title">
+                    <h3>Login</h3>
+                    <small>Please enter your credentials to login.</small>
+                </div>
+            </div>
+            <div class="panel panel-filled">
+                <div class="panel-body">
+                    <form id="loginForm" novalidate>
+                        <div class="form-group">
+                            <label class="control-label" for="username">Username</label>
+                            <input type="text" placeholder="example@gmail.com" required name="username" id="username" class="form-control">
+                            <span class="help-block small">Your unique username to app</span>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label" for="password">Password</label>
+                            <input type="password" placeholder="******" required name="password" id="password" class="form-control">
+                            <span class="help-block small">Your strong password</span>
+                        </div>
+                        <div>
+                            <button type="submit" class="btn btn-accent">Login</button>
+                            <a class="btn btn-default" href="/registro">Register</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+
+<script src="vendor/pacejs/pace.min.js"></script>
+<script src="vendor/jquery/dist/jquery.min.js"></script>
+<script src="vendor/bootstrap/js/bootstrap.min.js"></script>
+<script src="scripts/luna.js"></script>
+
+<!-- Añadido para manejar el login y enviar el token -->
+<script>
+    document.getElementById('loginForm').addEventListener('submit', function (event) {
+        event.preventDefault(); // Evitar el envío del formulario por defecto
+        const username = document.getElementById('username').value;
+        const password = document.getElementById('password').value;
+        const token = localStorage.getItem('token'); // Obtener el token del localStorage
+
+        fetch('http://localhost:3000/sinin', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ username, password }),
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.mensaje) {
+                alert(data.mensaje); // Mostrar el mensaje de éxito o error
+                if (data.success) { // Asegúrate de que tu API devuelve un campo 'success'
+                // Almacenar el token en localStorage
+                    localStorage.setItem("token", data.token);
+                    window.location.href = 'dashboard.html'; // Redirigir al dashboard
+                    
+                }
+            }
+        })
+        .catch((error) => {
+            console.error('Error:', error);
+        });
+    });
+</script>
+</body>
+</html>

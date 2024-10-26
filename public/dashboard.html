@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="styles/style.css">
+    <script src="luna.js"></script>
+</head>
+<body>
+    <h1 id="bienvenido">Bienvenido</h1>
+    <div class="container">
+        
+
+        <script>
+            // Verificar si el token ya está en localStorage
+            const token = localStorage.getItem('token');
+    
+            if (!token) {
+                // Si no hay token almacenado, redirige al login
+                console.log("Token no encontrado. Redirigiendo al login...");
+                window.location.href = '/';
+            } else {
+                // Puedes agregar aquí una llamada al backend para validar el token si es necesario
+                console.log("Token encontrado en localStorage:", token);
+                fetch('http://localhost:3000/user', {
+                            method: 'GET',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'Authorization': 'Bearer ' + token // Enviar el token en la cabecera
+                            },
+                        })
+                        .then(response => response.json())
+                        .then(data =>{
+                          document.getElementById('bienvenido').textContent = 'Bienvenido ' + data.user.username
+                        });
+            }
+        </script>
+    
+        <a href="/productos">Gestionar Productos</a>
+        <a href="/pedidos">Gestionar Pedidos</a>
+
+    </div>
+   
+</body>
+</html>
